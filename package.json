@@ -1,0 +1,14 @@
+{
+  "name": "nuxt-quickdoc",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:gwenaelp/nuxt-quickdoc.git",
+  "type": "module",
+  "author": "Gwenael Pluchon <accounts@gwenp.fr>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@nuxt/kit": "^3.8.2",
+    "@vue/repl": "^3.0.0"
+  }
+}
