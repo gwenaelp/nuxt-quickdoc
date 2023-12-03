@@ -23,7 +23,7 @@ const store = new ReplStore({
 
 const files: Record<string, (typeof imports)[keyof typeof imports]> = {}
 console.log('current example', props.example, exampleImports)
-const imports = exampleImports[props.example].files
+const imports = exampleImports[props.example]? exampleImports[props.example].files : {'App.vue': ''};
 const additionalImports: Object = ('additionalImports' in imports ? imports.additionalImports : {}) as Object;
 
 for (const example of Object.keys(imports).filter((i) => i !== 'additionalImports')) {
