@@ -6,12 +6,26 @@ import '@vue/repl/style.css';
 import CodeMirror from '@vue/repl/codemirror-editor';
 import { exampleImports } from '@/examples';
 //const exampleImports = {};
+import manifest from '../../package.json';
 
 const props = defineProps<{
   example: keyof typeof exampleImports;
   mainFile?: string;
   dependencies?: Record<string, string>;
 }>()
+
+
+const repositoryUrl = manifest.repository.url;
+
+// Remove the protocol and domain
+const pathWithoutProtocol = repositoryUrl.replace(/^https?:\/\//, '');
+// Remove the ".git" extension
+const pathWithoutGitExtension = pathWithoutProtocol.replace(/\.git$/, '');
+// Split the path into parts
+const pathParts = pathWithoutGitExtension.split('/');
+// Combine the last two parts to form the package name
+const packageName = `${pathParts[pathParts.length - 2]}/${pathParts[pathParts.length - 1]}`;
+
 
 let css = '';
 
@@ -46,7 +60,7 @@ await store.setFiles(
 // pre-set import map
 store.setImportMap({
   imports: {
-    'vue-diagrams': 'https://unpkg.com/vue-diagrams@latest',
+    ['@' + packageName]: `https://unpkg.com/@${packageName}@latest`,
     ...additionalImports,
   },
 } as any);
@@ -80,12 +94,15 @@ watch(() => props.example, async (newExample) => {
   const additionalImports: Object = ('additionalImports' in imports ? imports.additionalImports : {}) as Object;
   store.setImportMap({
     imports: {
-      'vue-diagrams': 'https://unpkg.com/vue-diagrams@latest',
+      [packageName]: `https://unpkg.com/@${packageName}@latest`,
       ...additionalImports,
     },
   } as any);
 });
 
+setTimeout(() => {
+  console.log('???', {['@' + packageName]: `https://unpkg.com/@${packageName}@latest`,})
+}, 2000);
 </script>
 
 <template>
