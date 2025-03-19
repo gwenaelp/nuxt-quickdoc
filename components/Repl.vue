@@ -14,7 +14,6 @@ const props = defineProps<{
   dependencies?: Record<string, string>;
 }>()
 
-
 const repositoryUrl = manifest.repository.url;
 
 // Remove the protocol and domain
@@ -24,7 +23,7 @@ const pathWithoutGitExtension = pathWithoutProtocol.replace(/\.git$/, '');
 // Split the path into parts
 const pathParts = pathWithoutGitExtension.split('/');
 // Combine the last two parts to form the package name
-const packageName = `${pathParts[pathParts.length - 2]}/${pathParts[pathParts.length - 1]}`;
+const packageName = `${pathParts[pathParts.length - 1]}`;
 
 
 let css = '';
@@ -36,9 +35,8 @@ const store = new ReplStore({
 
 
 const files: Record<string, (typeof imports)[keyof typeof imports]> = {}
-console.log('current example', props.example, exampleImports)
 const imports = exampleImports[props.example]? exampleImports[props.example].files : {'App.vue': ''};
-const additionalImports: Object = ('additionalImports' in imports ? imports.additionalImports : {}) as Object;
+let additionalImports: Object = ('additionalImports' in imports ? imports.additionalImports : {}) as Object;
 
 for (const example of Object.keys(imports).filter((i) => i !== 'additionalImports')) {
   if (example.includes('css')) {
@@ -49,21 +47,29 @@ for (const example of Object.keys(imports).filter((i) => i !== 'additionalImport
 }
 
 await store.setVueVersion('3.2.37')
-await store.setFiles(
-  {
-    ...files,
-    'main.css': css,
-  },
-  props.mainFile ?? 'App.vue',
-)
+const setFiles = async (files, css) => {
+  await store.setFiles(
+    {
+      ...files,
+      'main.css': css,
+    },
+    props.mainFile ?? 'App.vue',
+  );
+};
+
+await setFiles(files, css);
 
 // pre-set import map
-store.setImportMap({
-  imports: {
-    ['@' + packageName]: `https://unpkg.com/@${packageName}@latest`,
-    ...additionalImports,
-  },
-} as any);
+const loadImportMap = () => {
+  store.setImportMap({
+    imports: {
+      ['vue-diagrams']: `https://unpkg.com/vue-diagrams@latest`,
+      ...additionalImports,
+    },
+  } as any);
+};
+
+loadImportMap();
 
 
 watch(() => props.example, async (newExample) => {
@@ -82,29 +88,11 @@ watch(() => props.example, async (newExample) => {
       newFiles[example] = newImports[example as keyof typeof newImports];
     }
   }
-
-  await store.setFiles(
-    {
-      ...newFiles,
-      'main.css': newCss,
-    },
-    props.mainFile ?? 'App.vue',
-  );
-
-  const additionalImports: Object = ('additionalImports' in imports ? imports.additionalImports : {}) as Object;
-  store.setImportMap({
-    imports: {
-      [packageName]: `https://unpkg.com/@${packageName}@latest`,
-      ...additionalImports,
-    },
-  } as any);
+  await setFiles(newFiles, newCss);
+  additionalImports = ('additionalImports' in imports ? imports.additionalImports : {}) as Object;
+  loadImportMap();
 });
-
-setTimeout(() => {
-  console.log('???', {['@' + packageName]: `https://unpkg.com/@${packageName}@latest`,})
-}, 2000);
 </script>
-
 <template>
   <VueRepl
     :clear-console="true"
@@ -119,9 +107,6 @@ setTimeout(() => {
 </template>
 
 <style>
-.file-selector {
-}
-
 .vue-repl {
   --vh: 100vh;
   height: calc(var(--vh) - 72px);
