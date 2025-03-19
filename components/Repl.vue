@@ -26,7 +26,7 @@ const pathParts = pathWithoutGitExtension.split('/');
 const packageName = `${pathParts[pathParts.length - 1]}`;
 
 
-let css = '@import url('https://unpkg.com/vue-diagrams@latest/dist/vue-diagrams.css')';
+let css = `@import url('https://unpkg.com/vue-diagrams@latest/dist/vue-diagrams.css');`;
 
 const store = new ReplStore({
   showOutput: true,
