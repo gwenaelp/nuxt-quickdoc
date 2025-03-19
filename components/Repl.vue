@@ -79,7 +79,7 @@ watch(() => props.example, async (newExample) => {
   // For example, update the files and imports based on the new example
   let newImports = exampleImports[newExample].files;
   const newFiles: Record<string, (typeof imports)[keyof typeof imports]> = {};
-  let newCss = `@import url('https://unpkg.com/vue-diagrams@latest/dist/style.css')`;
+  let newCss = `@import url('https://unpkg.com/vue-diagrams@latest/dist/vue-diagrams.css')`;
 
   for (const example of Object.keys(newImports).filter((i) => i !== 'additionalImports')) {
     if (example.includes('css')) {
