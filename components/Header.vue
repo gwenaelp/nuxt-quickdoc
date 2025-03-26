@@ -11,12 +11,14 @@
           <img :src="`https://img.shields.io/github/stars/${packageName}`" alt="stars" />
           <i class="mdi mdi-github mdi-24px" />
         </a>
+        <DarkModeToggle />
       </div>
     </div>
   </div>
 </template>
 <script setup>
 import manifest from '../../package.json';
+import DarkModeToggle from './DarkModeToggle.vue';
 
 const repositoryUrl = manifest.repository.url;
 
@@ -56,10 +58,10 @@ const packageName = `${pathParts[pathParts.length - 2]}/${pathParts[pathParts.le
   font-size: 36px;
   font-weight: lighter;
   text-decoration: none;
-  color: black;
+  color: var(--text-color);
 }
 a {
-  color: #4a4a4a;
+  color: color-mix(in srgb, var(--text-color) 70%, transparent);
   display: block;
   line-height: 1.5;
   padding: 0.5rem 0.75rem;
@@ -68,6 +70,6 @@ a {
   height: 100%;
 }
 a:hover {
-  background: whitesmoke;
+  background: #4a4a4a50;
 }
 </style>

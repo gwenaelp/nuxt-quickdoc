@@ -64,7 +64,7 @@ h3 {
   padding: 10px;
   padding-left: 10px;
   font-size: 18px;
-  background-color: #ddd;
+  background-color: var(--dark-background-color);
   margin: 0;
 }
 ul {
@@ -74,13 +74,14 @@ ul {
 a {
   padding: 8px 16px;
   display: block;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--dark-background-color);
   cursor: pointer;
 }
 a:hover {
-  background: #eee;
+  background: #4a4a4a50;
 }
 a.selected {
+  background: #4a4a4aa0;
   font-weight: bold;
 }
 </style>
